@@ -174,8 +174,8 @@ app.post('/api/admin/settings',admin,(req,res)=>{
   db.prepare("INSERT INTO settings(key,value) VALUES('payment_details',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").run(String((req.body||{}).payment_details||'').slice(0,2000));
   db.prepare('INSERT INTO admin_logs(admin_id,action) VALUES(?,?)').run(req.admin,'update_payment_details');res.json({ok:1})});
 
+app.get('/',(q,r)=>r.sendFile(path.join(__dirname,'index.html')));
 app.get('/admin.html',(q,r)=>r.redirect('/admin'));
-app.use(express.static(path.join(__dirname,'public')));
-app.get('/admin',(q,r)=>r.sendFile(path.join(__dirname,'public','admin.html')));
+app.get('/admin',(q,r)=>r.sendFile(path.join(__dirname,'admin.html')));
 app.use((e,req,res,next)=>{res.status(400).json({error:e.code==='LIMIT_FILE_SIZE'?'Файл больше 5 МБ':e.message||'Ошибка'})});
 app.listen(PORT,()=>console.log('Школьник+: http://localhost:'+PORT));
